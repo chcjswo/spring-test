@@ -10,6 +10,7 @@ import me.mocadev.springtest.controller.request.SaveExamScoreRequest;
 import me.mocadev.springtest.controller.response.ExamPassStudentResponse;
 import me.mocadev.springtest.model.StudentPass;
 import me.mocadev.springtest.model.StudentScore;
+import me.mocadev.springtest.model.StudentScoreFixture;
 import me.mocadev.springtest.model.StudentScoreTestDataBuilder;
 import me.mocadev.springtest.repository.StudentFailRepository;
 import me.mocadev.springtest.repository.StudentPassRepository;
@@ -149,19 +150,15 @@ class StudentScoreServiceTest {
 	@Test
 	void checkScore2() {
 		// given
-		String exam = "midterm";
-		String studentName = "mocadev";
-		Integer korScore = 60;
-		Integer englishScore = 40;
-		Integer mathScore = 30;
+		StudentScore studentScore = StudentScoreFixture.failed();
 
 		// when
 		studentScoreService.saveScore(SaveExamScoreRequest.builder()
-			.studentName(studentName)
-			.korScore(korScore)
-			.englishScore(englishScore)
-			.mathScore(mathScore)
-			.build(), exam);
+			.studentName(studentScore.getStudentName())
+			.korScore(studentScore.getKorScore())
+			.englishScore(studentScore.getEnglishScore())
+			.mathScore(studentScore.getMathScore())
+			.build(), studentScore.getExam());
 
 		// then
 		Mockito.verify(studentScoreRepository, Mockito.times(1)).save(Mockito.any());
