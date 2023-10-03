@@ -14,6 +14,7 @@ import me.mocadev.springtest.repository.StudentFailRepository;
 import me.mocadev.springtest.repository.StudentPassRepository;
 import me.mocadev.springtest.repository.StudentScoreRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,12 +24,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 class StudentScoreServiceTest {
 
+	private StudentScoreService studentScoreService;
+	private StudentScoreRepository studentScoreRepository;
+	private StudentPassRepository studentPassRepository;
+	private StudentFailRepository studentFailRepository;
+
+	@BeforeEach
+	void setUp() {
+		studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
+		studentPassRepository = Mockito.mock(StudentPassRepository.class);
+		studentFailRepository = Mockito.mock(StudentFailRepository.class);
+		studentScoreService = new StudentScoreService(studentScoreRepository, studentPassRepository,
+			studentFailRepository);
+	}
+
 	@Test
 	void saveScore() {
 		// given
-		StudentScoreService studentScoreService = new StudentScoreService(Mockito.mock(StudentScoreRepository.class),
-			Mockito.mock(StudentPassRepository.class),
-			Mockito.mock(StudentFailRepository.class));
 		String exam = "midterm";
 		String studentName = "mocadev";
 		Integer korScore = 60;
@@ -48,10 +60,6 @@ class StudentScoreServiceTest {
 	@Test
 	void getPassStudent() {
 		// given
-		StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-		StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-		StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
 		StudentPass studentPass1 = StudentPass.builder()
 			.studentName("mocadev")
 			.exam("midterm")
@@ -97,13 +105,6 @@ class StudentScoreServiceTest {
 	@Test
 	void checkScore1() {
 		// given
-		StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-		StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-		StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-		StudentScoreService studentScoreService = new StudentScoreService(studentScoreRepository, studentPassRepository,
-			studentFailRepository);
-
 		String exam = "midterm";
 		String studentName = "mocadev";
 		Integer korScore = 60;
@@ -157,13 +158,6 @@ class StudentScoreServiceTest {
 	@Test
 	void checkScore2() {
 		// given
-		StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
-		StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
-		StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
-
-		StudentScoreService studentScoreService = new StudentScoreService(studentScoreRepository, studentPassRepository,
-			studentFailRepository);
-
 		String exam = "midterm";
 		String studentName = "mocadev";
 		Integer korScore = 60;
