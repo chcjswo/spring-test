@@ -1,14 +1,25 @@
 package me.mocadev.springtest.service;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.stream.Stream;
+import me.mocadev.springtest.Calculator;
 import me.mocadev.springtest.controller.request.SaveExamScoreRequest;
+import me.mocadev.springtest.controller.response.ExamPassStudentResponse;
 import me.mocadev.springtest.model.StudentPass;
+import me.mocadev.springtest.model.StudentScore;
 import me.mocadev.springtest.repository.StudentFailRepository;
 import me.mocadev.springtest.repository.StudentPassRepository;
 import me.mocadev.springtest.repository.StudentScoreRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class StudentScoreServiceTest {
 
@@ -33,8 +44,49 @@ class StudentScoreServiceTest {
 			.build(), exam);
 	}
 
+	@DisplayName("점수가 60점 이상인 학생들을 조회할 수 있어야 한다.")
 	@Test
 	void getPassStudent() {
+		// given
+		StudentScoreRepository studentScoreRepository = Mockito.mock(StudentScoreRepository.class);
+		StudentPassRepository studentPassRepository = Mockito.mock(StudentPassRepository.class);
+		StudentFailRepository studentFailRepository = Mockito.mock(StudentFailRepository.class);
+
+		StudentPass studentPass1 = StudentPass.builder()
+			.studentName("mocadev")
+			.exam("midterm")
+			.avgScore(60.0)
+			.build();
+		StudentPass studentPass2 = StudentPass.builder()
+			.studentName("mocadev2")
+			.exam("midterm")
+			.avgScore(70.0)
+			.build();
+		StudentPass studentPass3 = StudentPass.builder()
+			.studentName("mocadev2")
+			.exam("midterm2")
+			.avgScore(70.0)
+			.build();
+		Mockito.when(studentPassRepository.findAll()).thenReturn(List.of(
+			studentPass1,
+			studentPass2,
+			studentPass3
+		));
+
+		StudentScoreService studentScoreService = new StudentScoreService(studentScoreRepository, studentPassRepository,
+			studentFailRepository);
+
+		String exam = "midterm";
+
+		// when
+		List<ExamPassStudentResponse> results = studentScoreService.getPassStudent(exam);
+
+		List<ExamPassStudentResponse> response = Stream.of(studentPass1, studentPass2)
+			.map(m -> new ExamPassStudentResponse(m.getStudentName(), m.getAvgScore()))
+			.toList();
+
+		// then
+		Assertions.assertIterableEquals(response, results);
 	}
 
 	@Test
@@ -58,6 +110,28 @@ class StudentScoreServiceTest {
 		Integer englishScore = 80;
 		Integer mathScore = 80;
 
+		StudentScore studentScore = StudentScore.builder()
+			.studentName(studentName)
+			.exam(exam)
+			.korScore(korScore)
+			.englishScore(englishScore)
+			.mathScore(mathScore)
+			.build();
+
+		StudentPass studentPass = StudentPass.builder()
+			.studentName(studentName)
+			.exam(exam)
+			.avgScore(new Calculator()
+				.add(korScore.doubleValue())
+				.add(englishScore.doubleValue())
+				.add(mathScore.doubleValue())
+				.divide(3.0)
+				.getResult())
+			.build();
+
+		ArgumentCaptor<StudentScore> studentScoreArgumentCaptor = ArgumentCaptor.forClass(StudentScore.class);
+		ArgumentCaptor<StudentPass> studentPassArgumentCaptor = ArgumentCaptor.forClass(StudentPass.class);
+
 		// when
 		studentScoreService.saveScore(SaveExamScoreRequest.builder()
 			.studentName(studentName)
@@ -67,9 +141,16 @@ class StudentScoreServiceTest {
 			.build(), exam);
 
 		// then
-		Mockito.verify(studentScoreRepository, Mockito.times(1)).save(Mockito.any());
-		Mockito.verify(studentPassRepository, Mockito.times(1)).save(Mockito.any());
+		Mockito.verify(studentScoreRepository, Mockito.times(1)).save(studentScoreArgumentCaptor.capture());
+		Mockito.verify(studentPassRepository, Mockito.times(1)).save(studentPassArgumentCaptor.capture());
 		Mockito.verify(studentFailRepository, Mockito.times(0)).save(Mockito.any());
+
+		StudentScore value = studentScoreArgumentCaptor.getValue();
+		assertThat(studentScore.getStudentName()).isEqualTo(value.getStudentName());
+		assertThat(studentScore.getExam()).isEqualTo(value.getExam());
+
+		StudentPass value1 = studentPassArgumentCaptor.getValue();
+		assertThat(studentPass.getStudentName()).isEqualTo(value1.getStudentName());
 	}
 
 	@DisplayName("점수가 60점 미만이면 불합격이어야 한다.")
