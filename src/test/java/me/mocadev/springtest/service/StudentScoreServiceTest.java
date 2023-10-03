@@ -9,6 +9,7 @@ import me.mocadev.springtest.Calculator;
 import me.mocadev.springtest.controller.request.SaveExamScoreRequest;
 import me.mocadev.springtest.controller.response.ExamPassStudentResponse;
 import me.mocadev.springtest.model.StudentPass;
+import me.mocadev.springtest.model.StudentPassFixture;
 import me.mocadev.springtest.model.StudentScore;
 import me.mocadev.springtest.model.StudentScoreFixture;
 import me.mocadev.springtest.model.StudentScoreTestDataBuilder;
@@ -111,16 +112,7 @@ class StudentScoreServiceTest {
 			.mathScore(90)
 			.build();
 
-		StudentPass studentPass = StudentPass.builder()
-			.studentName(studentScore.getStudentName())
-			.exam(studentScore.getExam())
-			.avgScore(new Calculator()
-				.add(studentScore.getKorScore().doubleValue())
-				.add(studentScore.getEnglishScore().doubleValue())
-				.add(studentScore.getMathScore().doubleValue())
-				.divide(3.0)
-				.getResult())
-			.build();
+		StudentPass studentPass = StudentPassFixture.create(studentScore);
 
 		ArgumentCaptor<StudentScore> studentScoreArgumentCaptor = ArgumentCaptor.forClass(StudentScore.class);
 		ArgumentCaptor<StudentPass> studentPassArgumentCaptor = ArgumentCaptor.forClass(StudentPass.class);
