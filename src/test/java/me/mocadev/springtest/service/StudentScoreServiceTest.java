@@ -10,6 +10,7 @@ import me.mocadev.springtest.controller.request.SaveExamScoreRequest;
 import me.mocadev.springtest.controller.response.ExamPassStudentResponse;
 import me.mocadev.springtest.model.StudentPass;
 import me.mocadev.springtest.model.StudentScore;
+import me.mocadev.springtest.model.StudentScoreTestDataBuilder;
 import me.mocadev.springtest.repository.StudentFailRepository;
 import me.mocadev.springtest.repository.StudentPassRepository;
 import me.mocadev.springtest.repository.StudentScoreRepository;
@@ -105,27 +106,17 @@ class StudentScoreServiceTest {
 	@Test
 	void checkScore1() {
 		// given
-		String exam = "midterm";
-		String studentName = "mocadev";
-		Integer korScore = 60;
-		Integer englishScore = 80;
-		Integer mathScore = 80;
-
-		StudentScore studentScore = StudentScore.builder()
-			.studentName(studentName)
-			.exam(exam)
-			.korScore(korScore)
-			.englishScore(englishScore)
-			.mathScore(mathScore)
+		StudentScore studentScore = StudentScoreTestDataBuilder.passed()
+			.mathScore(90)
 			.build();
 
 		StudentPass studentPass = StudentPass.builder()
-			.studentName(studentName)
-			.exam(exam)
+			.studentName(studentScore.getStudentName())
+			.exam(studentScore.getExam())
 			.avgScore(new Calculator()
-				.add(korScore.doubleValue())
-				.add(englishScore.doubleValue())
-				.add(mathScore.doubleValue())
+				.add(studentScore.getKorScore().doubleValue())
+				.add(studentScore.getEnglishScore().doubleValue())
+				.add(studentScore.getMathScore().doubleValue())
 				.divide(3.0)
 				.getResult())
 			.build();
@@ -135,11 +126,11 @@ class StudentScoreServiceTest {
 
 		// when
 		studentScoreService.saveScore(SaveExamScoreRequest.builder()
-			.studentName(studentName)
-			.korScore(korScore)
-			.englishScore(englishScore)
-			.mathScore(mathScore)
-			.build(), exam);
+			.studentName(studentScore.getStudentName())
+			.korScore(studentScore.getKorScore())
+			.englishScore(studentScore.getEnglishScore())
+			.mathScore(studentScore.getMathScore())
+			.build(), studentScore.getExam());
 
 		// then
 		Mockito.verify(studentScoreRepository, Mockito.times(1)).save(studentScoreArgumentCaptor.capture());
