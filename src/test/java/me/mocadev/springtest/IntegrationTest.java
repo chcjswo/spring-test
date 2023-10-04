@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import com.redis.testcontainers.RedisContainer;
 import jakarta.transaction.Transactional;
 import org.junit.Ignore;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 public class IntegrationTest {
 
 	static DockerComposeContainer container;
+	static RedisContainer redis;
 
 	static {
 		container = new DockerComposeContainer(
@@ -34,6 +36,9 @@ public class IntegrationTest {
 				.withStartupTimeout(Duration.ofSeconds(300))
 		);
 		container.start();
+
+		redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
+		redis.start();
 	}
 
 	static class IntegrationTestInit implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -47,6 +52,12 @@ public class IntegrationTest {
 
 			properties.put("spring.datasource.url", String.format("jdbc:mysql://%s:%s/spring_test?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8",
 				serviceHost, servicePort));
+
+			String redisHost = redis.getHost();
+			Integer redisPort = redis.getFirstMappedPort();
+
+			properties.put("spring.data.redis.host", redisHost);
+			properties.put("spring.data.redis.port", redisPort.toString());
 
 			TestPropertyValues.of(properties).applyTo(applicationContext);
 		}
