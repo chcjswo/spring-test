@@ -43,6 +43,8 @@ dependencies {
 	implementation('software.amazon.awssdk:sts:2.20.69')
 	implementation('software.amazon.awssdk:s3:2.20.68')
 	testImplementation("org.testcontainers:localstack:1.19.0")
+
+	testImplementation 'com.tngtech.archunit:archunit:1.1.0'
 }
 
 tasks.named('test') {
