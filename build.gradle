@@ -35,6 +35,14 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	testImplementation "com.redis.testcontainers:testcontainers-redis-junit:1.6.4"
+
+	implementation(platform("software.amazon.awssdk:bom:2.20.136"))
+	implementation("commons-io:commons-io:2.13.0")
+	implementation('software.amazon.awssdk:aws-core:2.20.69')
+	implementation('software.amazon.awssdk:sdk-core:2.20.66')
+	implementation('software.amazon.awssdk:sts:2.20.69')
+	implementation('software.amazon.awssdk:s3:2.20.68')
+	testImplementation("org.testcontainers:localstack:1.19.0")
 }
 
 tasks.named('test') {
