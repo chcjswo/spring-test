@@ -44,7 +44,7 @@ class ArchitectureTest {
 	@DisplayName("request 패키지 안에 있는 클래스들은 Request로 끝나야 한다.")
 	void request() {
 		ArchRule rule = classes()
-			.that().resideInAPackage("..request..")
+			.that().resideInAnyPackage("..request..")
 			.should().haveSimpleNameEndingWith("Request");
 
 		rule.check(javaClasses);
@@ -54,7 +54,7 @@ class ArchitectureTest {
 	@DisplayName("response 패키지 안에 있는 클래스들은 Response로 끝나야 한다.")
 	void response() {
 		ArchRule rule = classes()
-			.that().resideInAPackage("..response..")
+			.that().resideInAnyPackage("..response..")
 			.should().haveSimpleNameEndingWith("Response");
 
 		rule.check(javaClasses);
@@ -64,7 +64,7 @@ class ArchitectureTest {
 	@DisplayName("repository 패키지 안에 있는 클래스들은 Repository로 끝나야 하고, Repository 인터페이스를 상속받아야 한다.")
 	void repository() {
 		ArchRule rule = classes()
-			.that().resideInAPackage("..repository..")
+			.that().resideInAnyPackage("..repository..")
 			.should().haveSimpleNameEndingWith("Repository")
 			.andShould().beInterfaces();
 
@@ -75,7 +75,7 @@ class ArchitectureTest {
 	@DisplayName("service 패키지 안에 있는 클래스들은 Service로 끝나야 하고, @Service 어노테이션이 있어야 한다.")
 	void service() {
 		ArchRule rule = classes()
-			.that().resideInAPackage("..service..")
+			.that().resideInAnyPackage("..service..")
 			.should().haveSimpleNameEndingWith("Service")
 			.andShould().beAnnotatedWith(Service.class);
 
@@ -141,7 +141,7 @@ class ArchitectureTest {
 	@Test
 	void modelNotDependency() {
 		ArchRule rule = classes()
-			.that().resideInAnyPackage("..model..")i
+			.that().resideInAnyPackage("..model..")
 			.should().onlyDependOnClassesThat()
 			.resideInAnyPackage("..model..", "java..", "jakarta..");
 
