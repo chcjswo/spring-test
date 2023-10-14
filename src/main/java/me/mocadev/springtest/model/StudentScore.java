@@ -19,15 +19,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "student_score")
 public class StudentScore {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "student_score_id")
-	private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "student_score_id")
+  private Long id;
 
-	private String exam;
-	private String studentName;
-	private Integer korScore;
-	private Integer englishScore;
-	private Integer mathScore;
-
+  private String exam;
+  private String studentName;
+  private Integer korScore;
+  private Integer englishScore;
+  private Integer mathScore;
 }

@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "student_pass")
 public class StudentPass {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "student_pass_id")
-	private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "student_pass_id")
+  private Long id;
 
-	private String exam;
-	private String studentName;
-	private Double avgScore;
+  private String exam;
+  private String studentName;
+  private Double avgScore;
 }

@@ -16,21 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScoreController {
 
-	private final StudentScoreService studentScoreService;
+  private final StudentScoreService studentScoreService;
 
-	@PutMapping("/exam/{exam}/score")
-	public void save(@PathVariable String exam,
-					   @RequestBody SaveExamScoreRequest request) {
-		studentScoreService.saveScore(request, exam);
-	}
+  @PutMapping("/exam/{exam}/score")
+  public void save(@PathVariable String exam, @RequestBody SaveExamScoreRequest request) {
+    studentScoreService.saveScore(request, exam);
+  }
 
-	@GetMapping("/exam/{exam}/pass")
-	public List<ExamPassStudentResponse> get(@PathVariable String exam) {
-		return studentScoreService.getPassStudent(exam);
-	}
+  @GetMapping("/exam/{exam}/pass")
+  public List<ExamPassStudentResponse> get(@PathVariable String exam) {
+    return studentScoreService.getPassStudent(exam);
+  }
 
-	@GetMapping("/exam/{exam}/fail")
-	public List<ExamFailStudentResponse> fail(@PathVariable String exam) {
-		return studentScoreService.getFailStudent(exam);
-	}
+  @GetMapping("/exam/{exam}/fail")
+  public List<ExamFailStudentResponse> fail(@PathVariable String exam) {
+    return studentScoreService.getFailStudent(exam);
+  }
 }
