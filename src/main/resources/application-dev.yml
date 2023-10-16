@@ -11,9 +11,6 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: root
         password: 1111
-    h2:
-        console:
-            enabled: true
     jpa:
         open-in-view: false
         hibernate:

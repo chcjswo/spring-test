@@ -2,9 +2,13 @@ package me.mocadev.springtest.config;
 
 import java.util.Arrays;
 import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import me.mocadev.springtest.dto.ResponseDto;
+import me.mocadev.springtest.util.CustomResponseUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -37,6 +41,10 @@ public class SecurityConfig {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.formLogin().disable();
 		http.httpBasic().disable();
+
+		http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
+			CustomResponseUtil.unAuthentication(response, "인증되지 않은 사용자입니다.");
+		});
 
 		http.authorizeHttpRequests()
 			.requestMatchers("/api/s/**").authenticated()
