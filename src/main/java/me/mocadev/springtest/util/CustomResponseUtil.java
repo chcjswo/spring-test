@@ -10,6 +10,19 @@ import org.springframework.http.MediaType;
 @Slf4j
 public class CustomResponseUtil {
 
+	public static void success(HttpServletResponse response, Object dto) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			ResponseDto<?> responseDto = new ResponseDto<>(-1, "로그인 성공", dto);
+			String responseBody = objectMapper.writeValueAsString(responseDto);
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			response.setStatus(200);
+			response.getWriter().println(responseBody);
+		} catch (Exception e) {
+			log.error("unAuthentication error", e);
+		}
+	}
+
 	public static void unAuthentication(HttpServletResponse response, String message) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
