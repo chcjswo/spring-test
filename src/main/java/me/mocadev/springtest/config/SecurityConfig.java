@@ -1,15 +1,10 @@
 package me.mocadev.springtest.config;
 
-import java.util.Arrays;
-import java.util.List;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import me.mocadev.springtest.dto.ResponseDto;
 import me.mocadev.springtest.jwt.JwtAuthenticationFilter;
 import me.mocadev.springtest.util.CustomResponseUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;

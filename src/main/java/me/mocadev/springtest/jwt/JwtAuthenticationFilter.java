@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -34,8 +35,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			return authenticationManager.authenticate(token);
 		} catch (Exception e) {
 			// authencationEntryPoint가 handling
+			// unsuccessfulAuthentication 메서드가 실행된다.
 			throw new InternalAuthenticationServiceException(e.getMessage());
 		}
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
+		throws IOException, ServletException {
+		CustomResponseUtil.unAuthentication(response, "로그인 실패");
 	}
 
 	@Override
